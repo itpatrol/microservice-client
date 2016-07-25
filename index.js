@@ -42,11 +42,11 @@ ZenciMicroserviceClient.prototype.settings = {};
  *    - Request
  *    - RecordID
  */
-ZenciMicroserviceClient.prototype._request = function(statusRequest, callback){
+ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
   var self = this;
 
-  let signatureMethods = ["PUT", "SEARCH", "PATCH", "POST"];
-  let recordMethods = ["PUT", "PATCH", "GET", "DELETE" ];
+  let signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST'];
+  let recordMethods = ['PUT', 'PATCH', 'GET', 'DELETE' ];
 
   var url = self.settings.URL;
 
@@ -69,7 +69,7 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback){
   }
 
   if (recordMethods.indexOf(statusRequest.method) > -1) {
-    if(statusRequest.RecordID) {
+    if (statusRequest.RecordID) {
       var url = self.settings.URL + '/' + statusRequest.RecordID;
     }
   }
@@ -97,7 +97,7 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback){
 /**
  * Search wrapper.
  */
-ZenciMicroserviceClient.prototype.search = function(data, callback){
+ZenciMicroserviceClient.prototype.search = function(data, callback) {
   var self = this;
   var statusRequest = {
     method: 'SEARCH',
