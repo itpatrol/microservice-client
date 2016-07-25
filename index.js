@@ -106,4 +106,17 @@ ZenciMicroserviceClient.prototype.search = function(data, callback) {
   return self._request(statusRequest, callback);
 }
 
+/**
+ * Search wrapper.
+ */
+ZenciMicroserviceClient.prototype.post = function(data, callback) {
+  var self = this;
+  var statusRequest = {
+    method: 'POST',
+    Request: data
+  }
+  return self._request(statusRequest, callback);
+}
+
+
 module.exports = ZenciMicroserviceClient;
