@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/itpatrol/zenci-microservice-client/issues"
   },
-  "homepage": "https://github.com/itpatrol/zenci-microservice-client#readme"
+  "homepage": "https://github.com/itpatrol/zenci-microservice-client#readme",
+  "dependencies": {
+    "request": "^2.74.0"
+  }
 }

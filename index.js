@@ -42,7 +42,7 @@ ZenciMicroserviceClient.prototype.settings = {};
  *    - Request
  *    - RecordID
  */
-ZenciMicroserviceClient.prototype._request(statusRequest, callback){
+ZenciMicroserviceClient.prototype._request = function(statusRequest, callback){
   var self = this;
 
   let signatureMethods = ["PUT", "SEARCH", "PATCH", "POST"];
@@ -97,7 +97,7 @@ ZenciMicroserviceClient.prototype._request(statusRequest, callback){
 /**
  * Search wrapper.
  */
-ZenciMicroserviceClient.prototype.search(data, callback){
+ZenciMicroserviceClient.prototype.search = function(data, callback){
   var self = this;
   var statusRequest = {
     method: 'SEARCH',
@@ -105,8 +105,5 @@ ZenciMicroserviceClient.prototype.search(data, callback){
   }
   return self._request(statusRequest, callback);
 }
-/**
- * Doing request to webHook and return data to callback.
- */
-BasicTask.prototype.callStatusServer = function(method, statusTaskRequest, callback) {
-}
+
+module.exports = ZenciMicroserviceClient;
