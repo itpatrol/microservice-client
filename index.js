@@ -95,6 +95,34 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
 }
 
 /**
+ * Get wrapper.
+ */
+ZenciMicroserviceClient.prototype.get = function(RecordID, token, callback) {
+  var self = this;
+  var statusRequest = {
+    method: 'GET',
+    token: token,
+    RecordID: RecordID,
+    Request: null
+  }
+  return self._request(statusRequest, callback);
+}
+
+/**
+ * Get wrapper.
+ */
+ZenciMicroserviceClient.prototype.delete = function(RecordID, token, callback) {
+  var self = this;
+  var statusRequest = {
+    method: 'DELETE',
+    token: token,
+    RecordID: RecordID,
+    Request: null
+  }
+  return self._request(statusRequest, callback);
+}
+
+/**
  * Search wrapper.
  */
 ZenciMicroserviceClient.prototype.search = function(data, callback) {
@@ -107,7 +135,7 @@ ZenciMicroserviceClient.prototype.search = function(data, callback) {
 }
 
 /**
- * Search wrapper.
+ * POST wrapper.
  */
 ZenciMicroserviceClient.prototype.post = function(data, callback) {
   var self = this;
