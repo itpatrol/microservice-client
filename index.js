@@ -146,5 +146,19 @@ ZenciMicroserviceClient.prototype.post = function(data, callback) {
   return self._request(statusRequest, callback);
 }
 
+/**
+ * Get wrapper.
+ */
+ZenciMicroserviceClient.prototype.put = function(RecordID, token, data, callback) {
+  var self = this;
+  var statusRequest = {
+    method: 'PUT',
+    token: token,
+    RecordID: RecordID,
+    Request: data
+  }
+  return self._request(statusRequest, callback);
+}
+
 
 module.exports = ZenciMicroserviceClient;
