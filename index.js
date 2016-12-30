@@ -57,14 +57,18 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
     'User-Agent': 'ZenciMicroserviceClient.' + process.env.npm_package_version
   };
 
-  if (signatureMethods.indexOf(statusRequest.method) > -1) {
-    if (self.settings.secureKey) {
-      headers.signature = 'sha256=' +
-        signature('sha256', JSON.stringify(requestData), self.settings.secureKey);
-    }
+  if (self.settings.accessToken) {
+    headers.access_token = self.settings.accessToken;
   } else {
-    if (statusRequest.token) {
-      headers.token = statusRequest.token;
+    if (signatureMethods.indexOf(statusRequest.method) > -1) {
+      if (self.settings.secureKey) {
+        headers.signature = 'sha256=' +
+          signature('sha256', JSON.stringify(requestData), self.settings.secureKey);
+      }
+    } else {
+      if (statusRequest.token) {
+        headers.token = statusRequest.token;
+      }
     }
   }
 
@@ -90,7 +94,7 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
     }
 
     var err = new TypeError('Response code: ' + response.statusCode);
-    return callback(err, null);
+    return callback(err, body);
   });
 }
 
