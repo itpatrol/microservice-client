@@ -52,10 +52,17 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
 
   var requestData = statusRequest.Request;
 
-  var headers = {
-    Accept: 'application/json',
-    'User-Agent': 'ZenciMicroserviceClient.' + process.env.npm_package_version
-  };
+  var headers = {};
+  if(self.settings.headers) {
+    headers = self.settings.headers;
+    headers['Accept'] = 'application/json';
+    headers['User-Agent'] = 'ZenciMicroserviceClient.' + process.env.npm_package_version;
+  } else {
+    headers = {
+      Accept: 'application/json',
+      'User-Agent': 'ZenciMicroserviceClient.' + process.env.npm_package_version
+    };
+  }
 
   if (self.settings.accessToken) {
     headers.access_token = self.settings.accessToken;
