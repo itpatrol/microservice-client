@@ -7,7 +7,7 @@ Simple example:
 ```
 'use strict';
 
-const MicroserviceClient = require('microservice-client');
+const MicroserviceClient = require('@microservice-framework/microservice-client');
 
 require('dotenv').config();
 
