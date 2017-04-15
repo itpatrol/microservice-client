@@ -1,7 +1,7 @@
 {
-  "name": "zenci-microservice-client",
-  "version": "0.1.4",
-  "description": "Client to do requests to zenci-microservice",
+  "name": "microservice-client",
+  "version": "1.0.0",
+  "description": "Client Interface for microservice",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,15 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itpatrol/zenci-microservice-client.git"
+    "url": "git+https://github.com/itpatrol/microservice-client.git"
   },
   "author": "Gormartsen",
   "license": "SEE LICENSE IN <LICENSE.txt>",
   "bugs": {
-    "url": "https://github.com/itpatrol/zenci-microservice-client/issues"
+    "url": "https://github.com/itpatrol/microservice-client/issues"
   },
-  "homepage": "https://github.com/itpatrol/zenci-microservice-client#readme",
+  "homepage": "https://github.com/itpatrol/microservice-client#readme",
   "dependencies": {
     "request": "^2.74.0"
+  },
+  "devDependencies": {
+    "dotenv": "^2.0.0"
   }
 }

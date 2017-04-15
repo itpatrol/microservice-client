@@ -9,12 +9,12 @@ const signature = require('./includes/signature.js');
 const bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
 
 /**
- * Constructor of ZenciMicroserviceClientClient object.
+ * Constructor of MicroserviceClientClient object.
  *   .
  *   settings.URL = process.env.MONGO_URL;
  *   settings.secureKey = process.env.SECURE_KEY;
  */
-function ZenciMicroserviceClient(settings) {
+function MicroserviceClient(settings) {
 
   // Use a closure to preserve `this`
   var self = this;
@@ -32,7 +32,7 @@ function ZenciMicroserviceClient(settings) {
 /**
  * Settings for microservice.
  */
-ZenciMicroserviceClient.prototype.settings = {};
+MicroserviceClient.prototype.settings = {};
 
 /**
  * Request data from remote server.
@@ -42,7 +42,7 @@ ZenciMicroserviceClient.prototype.settings = {};
  *    - Request
  *    - RecordID
  */
-ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
+MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var self = this;
 
   let signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST'];
@@ -56,11 +56,11 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
   if(self.settings.headers) {
     headers = self.settings.headers;
     headers['Accept'] = 'application/json';
-    headers['User-Agent'] = 'ZenciMicroserviceClient.' + process.env.npm_package_version;
+    headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_version;
   } else {
     headers = {
       Accept: 'application/json',
-      'User-Agent': 'ZenciMicroserviceClient.' + process.env.npm_package_version
+      'User-Agent': 'MicroserviceClient.' + process.env.npm_package_version
     };
   }
 
@@ -108,7 +108,7 @@ ZenciMicroserviceClient.prototype._request = function(statusRequest, callback) {
 /**
  * Get wrapper.
  */
-ZenciMicroserviceClient.prototype.get = function(RecordID, token, callback) {
+MicroserviceClient.prototype.get = function(RecordID, token, callback) {
   var self = this;
   var statusRequest = {
     method: 'GET',
@@ -122,7 +122,7 @@ ZenciMicroserviceClient.prototype.get = function(RecordID, token, callback) {
 /**
  * Get wrapper.
  */
-ZenciMicroserviceClient.prototype.delete = function(RecordID, token, callback) {
+MicroserviceClient.prototype.delete = function(RecordID, token, callback) {
   var self = this;
   var statusRequest = {
     method: 'DELETE',
@@ -136,7 +136,7 @@ ZenciMicroserviceClient.prototype.delete = function(RecordID, token, callback) {
 /**
  * Search wrapper.
  */
-ZenciMicroserviceClient.prototype.search = function(data, callback) {
+MicroserviceClient.prototype.search = function(data, callback) {
   var self = this;
   var statusRequest = {
     method: 'SEARCH',
@@ -148,7 +148,7 @@ ZenciMicroserviceClient.prototype.search = function(data, callback) {
 /**
  * POST wrapper.
  */
-ZenciMicroserviceClient.prototype.post = function(data, callback) {
+MicroserviceClient.prototype.post = function(data, callback) {
   var self = this;
   var statusRequest = {
     method: 'POST',
@@ -160,7 +160,7 @@ ZenciMicroserviceClient.prototype.post = function(data, callback) {
 /**
  * Get wrapper.
  */
-ZenciMicroserviceClient.prototype.put = function(RecordID, token, data, callback) {
+MicroserviceClient.prototype.put = function(RecordID, token, data, callback) {
   var self = this;
   var statusRequest = {
     method: 'PUT',
@@ -172,4 +172,4 @@ ZenciMicroserviceClient.prototype.put = function(RecordID, token, data, callback
 }
 
 
-module.exports = ZenciMicroserviceClient;
+module.exports = MicroserviceClient;
