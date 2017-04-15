@@ -1,7 +1,7 @@
 {
-  "name": "microservice-client",
+  "name": "@microservice-framework/microservice-client",
   "version": "1.0.0",
-  "description": "Client Interface for microservice",
+  "description": "Client Interface for microservice-framework",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itpatrol/microservice-client.git"
+    "url": "git+https://github.com/microservice-framework/microservice-client.git"
   },
   "author": "Gormartsen",
-  "license": "SEE LICENSE IN <LICENSE.txt>",
+  "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/itpatrol/microservice-client/issues"
+    "url": "https://github.com/microservice-framework/microservice-client/issues"
   },
-  "homepage": "https://github.com/itpatrol/microservice-client#readme",
+  "homepage": "https://github.com/microservice-framework/microservice-client#readme",
   "dependencies": {
     "request": "^2.74.0"
   },
