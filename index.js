@@ -95,7 +95,6 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
     method: statusRequest.method,
     headers: headers,
     json: true,
-    followAllRedirects: true,
     body: requestData
   }, function(error, response, body) {
     if (error) {
