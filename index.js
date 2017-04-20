@@ -81,7 +81,12 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
 
   if (recordMethods.indexOf(statusRequest.method) > -1) {
     if (statusRequest.RecordID) {
-      var url = self.settings.URL + '/' + statusRequest.RecordID;
+      var url = self.settings.URL;
+      if(self.settings.URL.slice(-1) == '/') {
+        url = url + statusRequest.RecordID;
+      } else {
+        url = self.settings.URL + '/' + statusRequest.RecordID;
+      }
     }
   }
 
@@ -90,6 +95,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
     method: statusRequest.method,
     headers: headers,
     json: true,
+    followAllRedirects: true,
     body: requestData
   }, function(error, response, body) {
     if (error) {
