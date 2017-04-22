@@ -53,7 +53,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var requestData = statusRequest.Request;
 
   var headers = {};
-  if(self.settings.headers) {
+  if (self.settings.headers) {
     headers = self.settings.headers;
     headers['Accept'] = 'application/json';
     headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_version;
@@ -82,7 +82,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   if (recordMethods.indexOf(statusRequest.method) > -1) {
     if (statusRequest.RecordID) {
       var url = self.settings.URL;
-      if(self.settings.URL.slice(-1) == '/') {
+      if (self.settings.URL.slice(-1) == '/') {
         url = url + statusRequest.RecordID;
       } else {
         url = self.settings.URL + '/' + statusRequest.RecordID;
@@ -115,12 +115,19 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
  */
 MicroserviceClient.prototype.get = function(RecordID, token, callback) {
   var self = this;
+
   var statusRequest = {
     method: 'GET',
-    token: token,
     RecordID: RecordID,
     Request: null
   }
+
+  if (arguments.length === 2) {
+    callback = token;
+  } else {
+    statusRequest.token = token;
+  }
+
   return self._request(statusRequest, callback);
 }
 
@@ -131,10 +138,16 @@ MicroserviceClient.prototype.delete = function(RecordID, token, callback) {
   var self = this;
   var statusRequest = {
     method: 'DELETE',
-    token: token,
     RecordID: RecordID,
     Request: null
   }
+
+  if (arguments.length === 2) {
+    callback = token;
+  } else {
+    statusRequest.token = token;
+  }
+
   return self._request(statusRequest, callback);
 }
 
@@ -169,10 +182,17 @@ MicroserviceClient.prototype.put = function(RecordID, token, data, callback) {
   var self = this;
   var statusRequest = {
     method: 'PUT',
-    token: token,
-    RecordID: RecordID,
-    Request: data
+    RecordID: RecordID
   }
+
+  if (arguments.length === 3) {
+    callback = data;
+    data = token
+  } else {
+    statusRequest.token = token;
+  }
+  statusRequest.Request = data;
+
   return self._request(statusRequest, callback);
 }
 
