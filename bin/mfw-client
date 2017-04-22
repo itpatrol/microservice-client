@@ -7,10 +7,10 @@ const MicroserviceClient = require('../index.js');
 require('dotenv').config({silent: true});
 
 var clientSettings = {
-  URL: process.env.URL
+  URL: process.env.SELF_URL
 }
 
-if (!process.env.URL) {
+if (!process.env.SELF_URL) {
   console.log('Please provide Enviroment variable URL');
   process.exit();
 }
@@ -44,13 +44,14 @@ switch (process.argv[2]){
     }
 
     if (process.argv[4]) {
+      //console.log(process.argv);
       client.get(process.argv[3], process.argv[4], function(err, handlerResponse) {
         if (err) {
           console.log(err);
         }
         console.log(handlerResponse);
       });
-      process.exit();
+      break;
     }
 
     client.get(process.argv[3], function(err, handlerResponse) {
@@ -107,7 +108,7 @@ switch (process.argv[2]){
         }
         console.log(handlerResponse);
       });
-      process.exit();
+      break;
     }
 
     client.put(process.argv[3], process.argv[4], function(err, handlerResponse) {
@@ -136,7 +137,7 @@ switch (process.argv[2]){
         }
         console.log(handlerResponse);
       });
-      process.exit();
+      break;
     }
 
     client.delete(process.argv[3], function(err, handlerResponse) {
