@@ -45,7 +45,7 @@ MicroserviceClient.prototype.settings = {};
 MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var self = this;
 
-  let signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST'];
+  let signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
   let recordMethods = ['PUT', 'PATCH', 'GET', 'DELETE' ];
 
   var url = self.settings.URL;
@@ -175,6 +175,17 @@ MicroserviceClient.prototype.post = function(data, callback) {
   return self._request(statusRequest, callback);
 }
 
+/**
+ * POST wrapper.
+ */
+MicroserviceClient.prototype.options = function(data, callback) {
+  var self = this;
+  var statusRequest = {
+    method: 'OPTIONS',
+    Request: data
+  }
+  return self._request(statusRequest, callback);
+}
 /**
  * Get wrapper.
  */
