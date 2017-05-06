@@ -97,7 +97,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
     contentType: 'application/json',
     processData: false,
     data: JSON.stringify(requestData),
-    error: function (err) {
+    error: function(err) {
       var err = new TypeError('Communication error');
       return callback(err, null);
     },
