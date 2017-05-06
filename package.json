@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified yet.\" && exit 1",
-    "jscs": "jscs --fix index.js includes/*.js "
+    "build": "npm run build-full && npm run build-min",
+    "build-full": "browserify browser.js > microservice-client.js",
+    "build-min": "uglifyjs microservice-client.js -m --source-map microservice-client.min.map -o microservice-client.min.js",
+    "jscs": "jscs --fix index.js browser.js includes/*.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +21,7 @@
   },
   "homepage": "https://github.com/microservice-framework/microservice-client#readme",
   "dependencies": {
-    "request": "^2.74.0"
-  },
-  "devDependencies": {
-    "dotenv": "^2.0.0"
+    "create-hmac": "^1.1.4",
+    "reqwest": "^2.0.5"
   }
 }

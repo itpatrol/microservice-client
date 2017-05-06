@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const request = require('request');
+const request = require('reqwest');
 const signature = require('./includes/signature.js');
 
 const bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
@@ -13,14 +13,11 @@ const bind = function(fn, me) { return function() { return fn.apply(me, argument
  *   .
  *   settings.URL = process.env.MONGO_URL;
  *   settings.secureKey = process.env.SECURE_KEY;
+ *   settings.accessToken = if microservice-auth used, accessToken can be set here.
  */
 function MicroserviceClient(settings) {
-
-  // Use a closure to preserve `this`
   var self = this;
-
   self.settings = settings;
-
   self.get = bind(self.get, self);
   self.post = bind(self.post, self);
   self.put = bind(self.put, self);
@@ -34,13 +31,16 @@ function MicroserviceClient(settings) {
  */
 MicroserviceClient.prototype.settings = {};
 
+
 /**
- * Request data from remote server.
- *  statusRequest
- *    - method
- *    - token
- *    - Request
- *    - RecordID
+ * Preprocess request by signing in, setting headers and etc..
+ *
+ * @param {object} statusRequest
+ *  - method
+ *  - token
+ *  - Request
+ *  - RecordID
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var self = this;
@@ -89,29 +89,31 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
       }
     }
   }
-
   request({
-    uri: url,
+    url: url,
     method: statusRequest.method,
     headers: headers,
-    json: true,
-    body: requestData
-  }, function(error, response, body) {
-    if (error) {
+    type: 'json',
+    contentType: 'application/json',
+    processData: false,
+    data: JSON.stringify(requestData),
+    error: function (err) {
       var err = new TypeError('Communication error');
       return callback(err, null);
+    },
+    success: function(resp) {
+      console.log(resp);
+      return callback(null, resp);
     }
-    if (response.statusCode == 200) {
-      return callback(null, body);
-    }
-
-    var err = new TypeError('Response code: ' + response.statusCode);
-    return callback(err, body);
   });
 }
 
 /**
- * Get wrapper.
+ * Process GET (READ) request.
+ *
+ * @param {string} RecordID - sha256 for example.
+ * @param {string} token - optional, 24 length long string.
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype.get = function(RecordID, token, callback) {
   var self = this;
@@ -132,7 +134,11 @@ MicroserviceClient.prototype.get = function(RecordID, token, callback) {
 }
 
 /**
- * Get wrapper.
+ * Process DELETE request.
+ *
+ * @param {string} RecordID - sha256 for example.
+ * @param {string} token - optional, 24 length long string.
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype.delete = function(RecordID, token, callback) {
   var self = this;
@@ -152,7 +158,10 @@ MicroserviceClient.prototype.delete = function(RecordID, token, callback) {
 }
 
 /**
- * Search wrapper.
+ * Process SEARCH (get list of documents based on search criteria) request.
+ *
+ * @param {object} data - values that need to be updated.
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype.search = function(data, callback) {
   var self = this;
@@ -164,7 +173,10 @@ MicroserviceClient.prototype.search = function(data, callback) {
 }
 
 /**
- * POST wrapper.
+ * Process POST (CREATE) request.
+ *
+ * @param {object} data - object with document to create.
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype.post = function(data, callback) {
   var self = this;
@@ -176,7 +188,10 @@ MicroserviceClient.prototype.post = function(data, callback) {
 }
 
 /**
- * POST wrapper.
+ * Process OPTIONS (get data about supported methods and etc.) request.
+ *
+ * @param {object} data - ignored. For future use.
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype.options = function(data, callback) {
   var self = this;
@@ -186,8 +201,14 @@ MicroserviceClient.prototype.options = function(data, callback) {
   }
   return self._request(statusRequest, callback);
 }
+
 /**
- * Get wrapper.
+ * Process PUT (UPDATE) request.
+ *
+ * @param {string} RecordID - sha256 for example.
+ * @param {string} token - optional, 24 length long string .
+ * @param {object} data - values that need to be updated.
+ * @param {function} callback - return result to callback function
  */
 MicroserviceClient.prototype.put = function(RecordID, token, data, callback) {
   var self = this;
