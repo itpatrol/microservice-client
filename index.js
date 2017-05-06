@@ -45,8 +45,8 @@ MicroserviceClient.prototype.settings = {};
 MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var self = this;
 
-  let signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
-  let recordMethods = ['PUT', 'PATCH', 'GET', 'DELETE' ];
+  var signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
+  var recordMethods = ['PUT', 'PATCH', 'GET', 'DELETE' ];
 
   var url = self.settings.URL;
 
