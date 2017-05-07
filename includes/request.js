@@ -25,7 +25,7 @@ module.exports = function requestWrapper(options) {
       return options.error(error);
     }
     if (response.statusCode == 200) {
-      return options.success(null, body);
+      return options.success(body);
     }
     var err = new TypeError('Response code: ' + response.statusCode);
     err.response = body;
