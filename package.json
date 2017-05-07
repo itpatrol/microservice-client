@@ -3,11 +3,11 @@
   "version": "1.2.0",
   "description": "Client Interface for microservice-framework",
   "main": "index.js",
-  "files" : {
+  "files": [
     "index.js",
     "browser.js",
-    "includes",
-  },
+    "includes"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified yet.\" && exit 1",
     "build": "npm run build-full && npm run build-min",
