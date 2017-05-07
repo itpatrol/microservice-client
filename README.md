@@ -6,9 +6,37 @@
 
 Microservice framework client.
 
-Simple example:
-
+WebBrowser example:
+```html
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="http://microservice-frame.work/js/microservice-client.min.js"></script>
+    <script>
+$(function() {    
+    var clientSettings = {
+      URL: "https://apiserver.com/service",
+      secureKey: 'ServiceSecureKey'
+    }
+    client = new MicroserviceClient(clientSettings);
+    client.search({}, function(err, handlerResponse){
+      if(err){
+        return $('#result').html(err);
+      }
+      $('#result').html(JSON.stringify(handlerResponse, null, 2));
+    });
+});
+    </script>
+  </head>
+  <body>
+    <pre id="result"></pre>
+  </body>
+</html>
 ```
+
+Nodejs:
+
+```nodejs
 'use strict';
 
 const MicroserviceClient = require('@microservice-framework/microservice-client');
