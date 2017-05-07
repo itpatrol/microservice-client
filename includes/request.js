@@ -21,12 +21,14 @@ module.exports = function requestWrapper(options) {
     body: options.data
   }, function(error, response, body) {
     if (error) {
+      error.response = body;
       return options.error(error);
     }
     if (response.statusCode == 200) {
       return options.success(null, body);
     }
     var err = new TypeError('Response code: ' + response.statusCode);
-    return options.error(error);
+    err.response = body;
+    return options.error(err);
   });
 };
