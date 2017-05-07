@@ -8,6 +8,9 @@
     "browser.js",
     "includes"
   ],
+  "browser": {
+    "./includes/request.js": "./includes/request-browser.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified yet.\" && exit 1",
     "build": "npm run build-full && npm run build-min",
@@ -27,7 +30,7 @@
   "homepage": "https://github.com/microservice-framework/microservice-client#readme",
   "dependencies": {
     "create-hmac": "^1.1.4",
-    "reqwest": "^2.0.5",
-    "xhr2": "^0.1.4"
+    "request": "^2.81.0",
+    "reqwest": "^2.0.5"
   }
 }

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const request = require('reqwest');
+const request = require('./includes/request.js');
 const signature = require('./includes/signature.js');
 
 const bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
@@ -63,7 +63,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   }
 
   // If we are running under node, set version User-agent.
-  if(process.env.npm_package_version) {
+  if (process.env.npm_package_version) {
     headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_version;
   };
 
@@ -108,7 +108,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
       return callback(null, resp);
     }
   }
-  if(requestData){
+  if (requestData) {
     requestQuery.data = JSON.stringify(requestData);
   }
   request(requestQuery);
