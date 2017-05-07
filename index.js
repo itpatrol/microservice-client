@@ -104,7 +104,6 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
       return callback(err.response, null);
     },
     success: function(resp) {
-      console.log(resp);
       return callback(null, resp);
     }
   }
