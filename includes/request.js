@@ -18,7 +18,7 @@ module.exports = function requestWrapper(options) {
     method: options.method,
     headers: options.headers,
     json: true,
-    body: options.data
+    body: options.dataOrigin
   }, function(error, response, body) {
     if (error) {
       error.response = body;

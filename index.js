@@ -110,6 +110,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   }
   if (requestData) {
     requestQuery.data = JSON.stringify(requestData);
+    requestQuery.dataOrigin = requestData;
   }
   request(requestQuery);
 }
