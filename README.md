@@ -36,7 +36,7 @@ $(function() {
 
 Nodejs:
 
-```nodejs
+```js
 'use strict';
 
 const MicroserviceClient = require('@microservice-framework/microservice-client');
