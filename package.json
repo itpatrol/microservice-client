@@ -1,6 +1,6 @@
 {
   "name": "@microservice-framework/microservice-client",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Client Interface for microservice-framework",
   "main": "index.js",
   "files": [
@@ -13,9 +13,13 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified yet.\" && exit 1",
-    "build": "npm run build-full && npm run build-min",
+    "build": "npm run build-full && npm run build-min && npm run build-ws-full && npm run build-ws-min && npm run build-all && npm run build-all-min",
     "build-full": "browserify browser.js > microservice-client.js",
     "build-min": "uglifyjs microservice-client.js -m --source-map microservice-client.min.map -o microservice-client.min.js",
+    "build-ws-full": "browserify browser-ws.js > microservice-websocket.js",
+    "build-ws-min": "uglifyjs microservice-websocket.js -m --source-map microservice-websocket.min.map -o microservice-websocket.min.js",
+    "build-all": "browserify browser-ws.js browser.js > microservice-all.js",
+    "build-all-min": "uglifyjs microservice-all.js -m --source-map microservice-all.min.map -o microservice-all.min.js",
     "jscs": "jscs --fix index.js browser.js includes/*.js"
   },
   "repository": {
@@ -29,8 +33,10 @@
   },
   "homepage": "https://github.com/microservice-framework/microservice-client#readme",
   "dependencies": {
+    "browser-emitter": "^0.7.2",
     "create-hmac": "^1.1.4",
     "request": "^2.81.0",
-    "reqwest": "^2.0.5"
+    "reqwest": "^2.0.5",
+    "sha.js": "^2.4.8"
   }
 }
