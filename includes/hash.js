@@ -15,6 +15,6 @@ var createHash = require('sha.js')
 module.exports = function hash(obj) {
 
   return createHash('sha256')
-               .update(JSON.stringify(data) + Date.now())
+               .update(JSON.stringify(obj) + Date.now())
                .digest('hex');
 };
