@@ -35,6 +35,10 @@ function MicroserviceWebSocket(settings) {
       }
       var eventName = 'unknown';
       switch (answer.method) {
+        case 'ready': {
+          self.emit('ready', answer);
+          break;
+        }
         case 'POST': {
           eventName = 'create';
           break;
