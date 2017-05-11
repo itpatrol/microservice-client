@@ -22,6 +22,17 @@ function MicroserviceWebSocket(settings) {
     var answer = false;
     try {
       answer = JSON.parse(event.data);
+      if (answer.cmdHash) {
+        if (self.cmdCallbacks[answer.cmdHash]) {
+          if (answer.error) {
+            self.cmdCallbacks[answer.cmdHash](answer.error);
+          } else {
+            self.cmdCallbacks[answer.cmdHash](null, answer.message);
+          }
+          delete self.cmdCallbacks[answer.cmdHash];
+        }
+        return;
+      }
       var eventName = 'unknown';
       switch (answer.method) {
         case 'POST': {
@@ -54,7 +65,7 @@ function MicroserviceWebSocket(settings) {
           eventDeatils[loader] = answer.loaders[loader];
         }
       }
-      if (!answer.meta) {
+      if (!answer.meta && answer.message) {
         eventDeatils.message = answer.message;
       }
 
@@ -73,12 +84,6 @@ function MicroserviceWebSocket(settings) {
         }
       }
       eventDeatils.type = eventName;
-      if (answer.cmdHash) {
-        if (self.cmdCallbacks[answer.cmdHash]) {
-          self.cmdCallbacks[answer.cmdHash](eventDeatils);
-          delete self.cmdCallbacks[answer.cmdHash];
-        }
-      }
 
       // on('message').
       self.emit('message', eventDeatils);
@@ -157,14 +162,13 @@ MicroserviceWebSocket.prototype.get = function(EndPoint, RecordID, token, callba
   var statusRequest = {
     method: 'GET',
     RecordID: RecordID,
-    Request: null,
     EndPoint: EndPoint,
   }
 
   if (arguments.length === 2) {
     callback = token;
   } else {
-    statusRequest.token = token;
+    statusRequest.RecordToken = token;
   }
 
   return self._request(statusRequest, callback);
@@ -182,14 +186,13 @@ MicroserviceWebSocket.prototype.delete = function(EndPoint, RecordID, token, cal
   var statusRequest = {
     method: 'DELETE',
     RecordID: RecordID,
-    Request: null,
     EndPoint: EndPoint,
   }
 
   if (arguments.length === 2) {
     callback = token;
   } else {
-    statusRequest.token = token;
+    statusRequest.RecordToken = token;
   }
 
   return self._request(statusRequest, callback);
@@ -263,7 +266,7 @@ MicroserviceWebSocket.prototype.put = function(EndPoint, RecordID, token, data, 
     callback = data;
     data = token
   } else {
-    statusRequest.token = token;
+    statusRequest.RecordToken = token;
   }
   statusRequest.Request = data;
 
