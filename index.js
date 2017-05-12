@@ -96,15 +96,12 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
     url: url,
     method: statusRequest.method,
     headers: headers,
-    type: 'json',
     contentType: 'application/json',
-    processData: false,
-    crossOrigin: true,
     error: function(err) {
-      return callback(err.response, null);
+      return callback(err.response, null, err.headers);
     },
-    success: function(resp) {
-      return callback(null, resp);
+    success: function(resp, headers) {
+      return callback(null, resp, headers);
     }
   }
   if (requestData) {

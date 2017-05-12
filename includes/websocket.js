@@ -80,11 +80,14 @@ function MicroserviceWebSocket(settings) {
       self.emit(eventName + ':' + answer.scope, eventDeatils);
       if (answer.loaders) {
         for (var loader in answer.loaders) {
-          var eventSubName = eventName + ':' + answer.scope + ':'
-            + loader + '=' + answer.loaders[loader];
+          var loaderObject = answer.loaders[loader];
+          for (var key in loaderObject) {
+            var eventSubName = eventName + ':' + answer.scope + ':'
+            + loader + '.' + key + '=' + loaderObject[key];
 
-          // on('create|read|update|delete|search:scope:loader=value').
-          self.emit(eventSubName, eventDeatils);
+            // on('create|read|update|delete|search:scope:loader=value').
+            self.emit(eventSubName, eventDeatils);
+          }
         }
       }
       eventDeatils.type = eventName;
