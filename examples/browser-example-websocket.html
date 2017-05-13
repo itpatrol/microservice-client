@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
+    <script src="http://microservice-frame.work/js/microservice-client.min.js"></script> 
+    <script>
+$(function() {
+    var clientSettings = {
+      URL: "wss://apiserver.com/ws_endpoint/",
+      token: 'secureKey or AccessToken'
+    }
+    ws = new MicroserviceWebSocket(clientSettings);
+    var count = 0;
+    ws.on('message', function(object){
+      console.log(object);
+      count = count + 1;
+      $('.ws-status span.count').html(count);
+      $('.ws-messages').append('<div class="row"><pre>' + JSON.stringify(object, null, 2) + '</pre></div>');
+    });
+    ws.on('search:payload', function(object){
+      console.log('search:payload');
+      console.log(object);
+    });
+    ws.on('open', function(object){
+      console.log('open');
+      console.log(object);
+      $('.ws-status span.status').html('WS opened');
+    });
+    ws.on('close', function(object){
+      console.log('close');
+      console.log(object);
+      $('.ws-status span.status').html('WS closed');
+    });
+    ws.on('error', function(object){
+      console.log('error');
+      console.log(object);
+      $('.ws-status span.status').html('error received');
+    });
+});
+    </script> 
+  <style>
+.ws-status {
+  position: fixed ;
+  background: white;
+  padding: 10px;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  top:0;
+  left: 0;
+}
+body {
+  padding-top: 30px;
+}
+.ws-messages .row {
+  border-bottom: 1px solid #ccc;
+  padding-left: 10px;
+}
+  </style>
+  </head>
+  <body>
+    <div class="ws-status"><span class="status" >closed</span>  <span class="count"></span></div>
+    <div class="ws-messages"></div>
+  </body>
+
+</html>
