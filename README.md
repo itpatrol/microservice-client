@@ -6,11 +6,26 @@
 
 Microservice framework client.
 
-WebBrowser example:
+On webBrowser level is possible to use AJAX and WebSocket. 
+See examples [here](https://github.com/microservice-framework/microservice-client/tree/master/examples).
+
 ```html
-<html>
-  <head>
-    <script src="http://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="http://microservice-frame.work/js/microservice-client.min.js"></script>
+    <script>
+$(function() {    
+    var clientSettings = {
+      URL: "wss://apiserver.com/ws_endpoint/",
+      token: 'secureKey or AccessToken'
+    }
+    ws = new MicroserviceWebSocket(clientSettings);
+    ws.on('message', function(object){
+      console.log(object);
+    });
+});
+    </script>
+```
+
+```html
     <script src="http://microservice-frame.work/js/microservice-client.min.js"></script>
     <script>
 $(function() {    
@@ -27,12 +42,8 @@ $(function() {
     });
 });
     </script>
-  </head>
-  <body>
-    <pre id="result"></pre>
-  </body>
-</html>
 ```
+
 
 Nodejs:
 
