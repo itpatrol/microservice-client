@@ -27,7 +27,7 @@ function MicroserviceWebSocket(settings) {
           if (answer.error) {
             self.cmdCallbacks[answer.cmdHash](answer.error);
           } else {
-            self.cmdCallbacks[answer.cmdHash](null, answer.message);
+            self.cmdCallbacks[answer.cmdHash](null, answer.message, answer.headers);
           }
           delete self.cmdCallbacks[answer.cmdHash];
         }
@@ -63,6 +63,7 @@ function MicroserviceWebSocket(settings) {
       var eventDeatils = {
         path: answer.path,
         scope: answer.scope,
+        headers: answer.headers,
       }
       if (answer.loaders) {
         for (var loader in answer.loaders) {
