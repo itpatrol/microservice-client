@@ -22,7 +22,10 @@ module.exports = function requestWrapper(options) {
   }, function(error, response, body) {
     if (error) {
       error.response = body;
-      error.headers = response.headers;
+      error.headers = false;
+      if (response.headers) {
+        error.headers = response.headers;
+      }
       return options.error(error);
     }
     if (response.statusCode == 200) {
@@ -30,7 +33,10 @@ module.exports = function requestWrapper(options) {
     }
     var err = new TypeError('Response code: ' + response.statusCode);
     err.response = body;
-    err.headers = response.headers
+    err.headers = false;
+    if (response.headers) {
+      err.headers = response.headers;
+    }
     return options.error(err);
   });
 };
