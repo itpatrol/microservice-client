@@ -23,7 +23,7 @@ module.exports = function requestWrapper(options) {
     if (error) {
       error.response = body;
       error.headers = false;
-      if (response.headers) {
+      if (response) {
         error.headers = response.headers;
       }
       return options.error(error);
@@ -34,7 +34,7 @@ module.exports = function requestWrapper(options) {
     var err = new TypeError('Response code: ' + response.statusCode);
     err.response = body;
     err.headers = false;
-    if (response.headers) {
+    if (response) {
       err.headers = response.headers;
     }
     return options.error(err);
