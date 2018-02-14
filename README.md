@@ -41,6 +41,20 @@ $(function() {
       $('#result').html(JSON.stringify(handlerResponse, null, 2));
     });
 });
+
+$(function() {    
+    var clientSettings = {
+      URL: "https://apiserver.com",
+      secureKey: 'ServiceSecureKey'
+    }
+    client = new MicroserviceClient(clientSettings);
+    client.search('endpoint', {}, function(err, handlerResponse){
+      if(err){
+        return $('#result').html(err);
+      }
+      $('#result').html(JSON.stringify(handlerResponse, null, 2));
+    });
+});
     </script>
 ```
 
@@ -96,3 +110,9 @@ client.post({
 });
 
 ```
+
+## Changelog
+- 1.2.5
+  - added nodejs package name to UserAgent
+  - fixed URL variable
+  - added support for API based requests

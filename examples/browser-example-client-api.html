@@ -5,16 +5,23 @@
     <script>
 $(function() {
     var clientSettings = {
-      URL: "https://project.zen.ci/api/v1/owners",
-      secureKey: '983a71ab650893a38554a7bed5bc69ce3d7585a4'
+      URL: "https://apiserver.com",
+      accessToken: 'AccessToken'
     }
     client = new MicroserviceClient(clientSettings);
-    client.search({query:{},limit: 10}, function(err, handlerResponse, headers){
+    client.search('endpoint', {query:{},limit: 10}, function(err, handlerResponse, headers){
       console.log(headers);
       if(err){
         return $('#result').html(err);
       }
       $('#result').html(JSON.stringify(handlerResponse, null, 2));
+      client.get('endpoint/' + handlerResponse[0].id, function(err, handlerResponse, headers){
+        console.log(headers);
+        if(err){
+          return $('#result').html(err);
+        }
+        $('#result').html(JSON.stringify(handlerResponse, null, 2));
+      });
     });
 });
     </script> 

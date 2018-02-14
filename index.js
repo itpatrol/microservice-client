@@ -11,7 +11,7 @@ const bind = function(fn, me) { return function() { return fn.apply(me, argument
 /**
  * Constructor of MicroserviceClientClient object.
  *   .
- *   settings.URL = process.env.MONGO_URL;
+ *   settings.URL = process.env.SELF_URL;
  *   settings.secureKey = process.env.SECURE_KEY;
  *   settings.accessToken = if microservice-auth used, accessToken can be set here.
  */
@@ -46,9 +46,6 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var self = this;
 
   var signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
-  var recordMethods = ['PUT', 'PATCH', 'GET', 'DELETE' ];
-
-  var url = self.settings.URL;
 
   var requestData = statusRequest.Request;
 
@@ -64,7 +61,8 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
 
   // If we are running under node, set version User-agent.
   if (process.env.npm_package_version) {
-    headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_version;
+    headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_name
+      + '.' + process.env.npm_package_version;
   };
 
   if (self.settings.accessToken) {
@@ -81,17 +79,19 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
       }
     }
   }
-
-  if (recordMethods.indexOf(statusRequest.method) > -1) {
-    if (statusRequest.RecordID) {
-      var url = self.settings.URL;
-      if (self.settings.URL.slice(-1) == '/') {
-        url = url + statusRequest.RecordID;
-      } else {
-        url = self.settings.URL + '/' + statusRequest.RecordID;
-      }
-    }
+  var url = self.settings.URL;
+  if (url.slice(-1) == '/') {
+    url = url.substring(0, url.length - 1);
   }
+
+  if (statusRequest.EndPoint) {
+    url = url + '/' + statusRequest.EndPoint;
+  }
+
+  if (statusRequest.RecordID) {
+    url = url + '/' + statusRequest.RecordID;
+  }
+
   var requestQuery = {
     url: url,
     method: statusRequest.method,
@@ -166,12 +166,19 @@ MicroserviceClient.prototype.delete = function(RecordID, token, callback) {
  * @param {object} data - values that need to be updated.
  * @param {function} callback - return result to callback function
  */
-MicroserviceClient.prototype.search = function(data, callback) {
+MicroserviceClient.prototype.search = function(EndPoint, data, callback) {
   var self = this;
+  if (arguments.length === 2) {
+    callback = data;
+    data = EndPoint;
+    EndPoint = false;
+  }
   var statusRequest = {
     method: 'SEARCH',
-    Request: data
+    Request: data,
+    EndPoint: EndPoint,
   }
+
   return self._request(statusRequest, callback);
 }
 
@@ -181,11 +188,17 @@ MicroserviceClient.prototype.search = function(data, callback) {
  * @param {object} data - object with document to create.
  * @param {function} callback - return result to callback function
  */
-MicroserviceClient.prototype.post = function(data, callback) {
+MicroserviceClient.prototype.post = function(EndPoint, data, callback) {
   var self = this;
+  if (arguments.length === 2) {
+    callback = data;
+    data = EndPoint;
+    EndPoint = false;
+  }
   var statusRequest = {
     method: 'POST',
-    Request: data
+    Request: data,
+    EndPoint: EndPoint,
   }
   return self._request(statusRequest, callback);
 }
@@ -196,11 +209,17 @@ MicroserviceClient.prototype.post = function(data, callback) {
  * @param {object} data - ignored. For future use.
  * @param {function} callback - return result to callback function
  */
-MicroserviceClient.prototype.options = function(data, callback) {
+MicroserviceClient.prototype.options = function(EndPoint, data, callback) {
   var self = this;
+  if (arguments.length === 2) {
+    callback = data;
+    data = EndPoint;
+    EndPoint = false;
+  }
   var statusRequest = {
     method: 'OPTIONS',
-    Request: data
+    Request: data,
+    EndPoint: EndPoint,
   }
   return self._request(statusRequest, callback);
 }

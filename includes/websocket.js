@@ -173,7 +173,7 @@ MicroserviceWebSocket.prototype.get = function(EndPoint, RecordID, token, callba
     EndPoint: EndPoint,
   }
 
-  if (arguments.length === 2) {
+  if (arguments.length === 3) {
     callback = token;
   } else {
     statusRequest.RecordToken = token;
@@ -197,7 +197,7 @@ MicroserviceWebSocket.prototype.delete = function(EndPoint, RecordID, token, cal
     EndPoint: EndPoint,
   }
 
-  if (arguments.length === 2) {
+  if (arguments.length === 3) {
     callback = token;
   } else {
     statusRequest.RecordToken = token;
@@ -270,7 +270,7 @@ MicroserviceWebSocket.prototype.put = function(EndPoint, RecordID, token, data, 
     EndPoint: EndPoint,
   }
 
-  if (arguments.length === 3) {
+  if (arguments.length === 4) {
     callback = data;
     data = token
   } else {
