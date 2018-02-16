@@ -5,8 +5,8 @@
     <script>
 $(function() {
     var clientSettings = {
-      URL: "https://project.zen.ci/api/v1/owners",
-      secureKey: '983a71ab650893a38554a7bed5bc69ce3d7585a4'
+      URL: "https://apiserver.com/service",
+      secureKey: 'ServiceSecureKey'
     }
     client = new MicroserviceClient(clientSettings);
     client.search({query:{},limit: 10}, function(err, handlerResponse, headers){

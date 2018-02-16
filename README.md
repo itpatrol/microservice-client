@@ -116,3 +116,6 @@ client.post({
   - added nodejs package name to UserAgent
   - fixed URL variable
   - added support for API based requests
+- 1.3.0
+  - switch to 'Access-Token' instead of  'access_token'
+  - support new validation for microservices

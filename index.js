@@ -67,6 +67,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
 
   if (self.settings.accessToken) {
     headers.access_token = self.settings.accessToken;
+    headers['Access-Token'] = self.settings.accessToken;
   } else {
     if (signatureMethods.indexOf(statusRequest.method) > -1) {
       if (self.settings.secureKey) {
