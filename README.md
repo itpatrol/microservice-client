@@ -119,3 +119,6 @@ client.post({
 - 1.3.0
   - switch to 'Access-Token' instead of  'access_token'
   - support new validation for microservices
+- 1.3.1
+  - prevent autoset User-Agent if package linked by browser
+

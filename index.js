@@ -60,7 +60,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   }
 
   // If we are running under node, set version User-agent.
-  if (process.env.npm_package_version) {
+  if (process.env.npm_package_version && !process.browser) {
     headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_name
       + '.' + process.env.npm_package_version;
   };
