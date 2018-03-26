@@ -4,7 +4,7 @@
 'use strict';
 var Emitter = require('browser-emitter');
 var bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
-const createHash = require('./hash.js');
+var createHash = require('./hash.js');
 
 function MicroserviceWebSocket(settings) {
   Emitter.call(this);

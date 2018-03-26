@@ -1,4 +1,4 @@
-const request = require('reqwest');
+var request = require('reqwest');
 
 function convertHeaders(headers) {
   var lines = headers.split('\n');

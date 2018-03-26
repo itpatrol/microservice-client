@@ -3,10 +3,10 @@
  */
 'use strict';
 
-const request = require('./includes/request.js');
-const signature = require('./includes/signature.js');
+var request = require('./includes/request.js');
+var signature = require('./includes/signature.js');
 
-const bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
+var bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
 
 /**
  * Constructor of MicroserviceClientClient object.
