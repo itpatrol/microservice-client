@@ -52,7 +52,9 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var headers = {};
   if (self.settings.headers) {
     headers = self.settings.headers;
-    headers['Accept'] = 'application/json';
+    if(!headers['Accept']) {
+      headers['Accept'] = 'application/json';
+    }
   } else {
     headers = {
       Accept: 'application/json'

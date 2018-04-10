@@ -121,4 +121,8 @@ client.post({
   - support new validation for microservices
 - 1.3.1
   - prevent autoset User-Agent if package linked by browser
+- 1.3.2
+  - replace const with var for uglify compatibility.
+- 1.3.3
+  - allow to replace header 'Accept'
 
