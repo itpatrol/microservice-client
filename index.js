@@ -52,7 +52,7 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   var headers = {};
   if (self.settings.headers) {
     headers = self.settings.headers;
-    if(!headers['Accept']) {
+    if (!headers['Accept']) {
       headers['Accept'] = 'application/json';
     }
   } else {
@@ -65,10 +65,10 @@ MicroserviceClient.prototype._request = function(statusRequest, callback) {
   if (process.env.npm_package_version && !process.browser) {
     headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_name
       + '.' + process.env.npm_package_version;
-  };
+  }
 
   if (self.settings.accessToken) {
-    headers.access_token = self.settings.accessToken;
+    headers['access_token'] = self.settings.accessToken;
     headers['Access-Token'] = self.settings.accessToken;
   } else {
     if (signatureMethods.indexOf(statusRequest.method) > -1) {

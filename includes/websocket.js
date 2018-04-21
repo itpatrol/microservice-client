@@ -95,7 +95,7 @@ function MicroserviceWebSocket(settings) {
 
       // on('message').
       self.emit('message', eventDeatils);
-    } catch(e) {
+    } catch (e) {
       return self.emit('error', {
         URL: self.settings.URL,
         token: self.settings.token,
@@ -103,7 +103,7 @@ function MicroserviceWebSocket(settings) {
       });
     }
   }
-  self.websocket.onopen = function(event) {
+  self.websocket.onopen = function() {
     self.emit('open', {
       URL: self.settings.URL,
       token: self.settings.token
@@ -117,7 +117,7 @@ function MicroserviceWebSocket(settings) {
       reason: event.reason
     });
   }
-  self.websocket.onerror = function(event) {
+  self.websocket.onerror = function() {
     self.emit('error', {
       URL: self.settings.URL,
       token: self.settings.token

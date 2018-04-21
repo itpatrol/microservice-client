@@ -36,17 +36,21 @@ module.exports = function requestWrapper(options) {
   options.success = function(resp) {
     var headers = convertHeaders(resp.getAllResponseHeaders());
     var answer = false;
-    try {
-      answer = JSON.parse(resp.response)
-    } catch (e) {
-      e.response = resp.response;
-      e.headers = headers;
-      return options.error(e);
+    if (resp.response !== "") {
+      try {
+        answer = JSON.parse(resp.response)
+      } catch (e) {
+        e.response = resp.response;
+        e.headers = headers;
+        return options.error(e);
+      }
     }
     return _originSuccess(answer, headers);
   }
   options.error = function(err) {
-    err.headers = convertHeaders(err.getAllResponseHeaders());
+    if (err.getAllResponseHeaders) {
+      err.headers = convertHeaders(err.getAllResponseHeaders());
+    }
     return _originError(err);
   }
   request(options);

@@ -125,4 +125,6 @@ client.post({
   - replace const with var for uglify compatibility.
 - 1.3.3
   - allow to replace header 'Accept'
+- 1.3.4
+  - fix error when parse empty response as JSON.
 
