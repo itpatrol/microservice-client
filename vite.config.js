@@ -34,11 +34,12 @@ export default function (build) {
       rollupOptions: {
         // make sure to externalize deps that shouldn't be bundled
         // into your library
-        external: [],
+        external: ["debug"],
         output: {
           // Provide global variables to use in the UMD build
           // for externalized deps
           globals: {
+            debug: "debug"
           },
         },
       },

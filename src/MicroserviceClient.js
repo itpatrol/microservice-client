@@ -2,6 +2,17 @@ import axios from 'axios';
 import debugF from 'debug';
 import signature from './signature.js'
 
+var debug = {
+  log: function(){},
+  debug: function(){}
+}
+if(debugF) {
+  debug = {
+    debug: debugF('microservice-client:debug'),
+    log: debugF('microservice-client:log')
+  }
+}
+
 /**
  * Constructor of MicroserviceClientClient object.
  *   .
@@ -52,7 +63,6 @@ MicroserviceClient.prototype.debug = {
  * @returns {Promise}
  */
 MicroserviceClient.prototype._request = async function(reqOptions) {
-  var self = this;
   if(reqOptions.headers == undefined) {
     reqOptions.headers = {}
   }
@@ -65,13 +75,13 @@ MicroserviceClient.prototype._request = async function(reqOptions) {
     reqOptions.headers['Access-Token'] = false
   }
 
-  this.debug.log('reqOptions', reqOptions)
+  debug.debug('reqOptions', reqOptions)
   
   return this.instance.request(reqOptions).
   then(function(response) {
-    self.debug.log('request', response.config.headers)
-    self.debug.debug('response', response);
-    self.debug.log(response.config.method.toUpperCase(), response.config.url, response.status)
+    debug.debug('request', response.config.headers)
+    debug.debug('response', response);
+    debug.log(response.config.method.toUpperCase(), response.config.url, response.status)
     return {
       code: response.status,
       answer: response.data, 
@@ -80,11 +90,11 @@ MicroserviceClient.prototype._request = async function(reqOptions) {
     }
   }).
   catch(function(error){
-    self.debug.debug('catch', error.request)
+    debug.debug('catch', error.request)
     if(error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      self.debug.log(error.response.config.method.toUpperCase(), error.response.config.url, error.response.status, error.response.data.message)
+      debug.log(error.response.config.method.toUpperCase(), error.response.config.url, error.response.status, error.response.data.message)
       return {
         code: error.response.status,
         error: error.response.data, 

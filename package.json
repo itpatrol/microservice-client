@@ -10,7 +10,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./src/MicroserviceClient.js",
+      "node": "./src/MicroserviceClient.js",
+      "import": "./dist/microservice-client.js",
       "require": "./dist/microservice-client.umd.cjs"
     }
   },
