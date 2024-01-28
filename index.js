@@ -1,6 +1,6 @@
 import axios from 'axios';
 import debugF from 'debug';
-import signature from './includes/hash.js'
+import signature from './includes/signature.js'
 //import sig2 from "./includes/signature.js"
 
 

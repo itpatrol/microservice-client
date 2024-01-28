@@ -1,21 +1,39 @@
 /**
  * Generate hash Signature for request
  */
-'use strict';
-
-var createHmac = require('create-hmac');
 
 /**
- * Sign string with secret key or token.
+ * Create unique hash for object.
  *
- * @param {string} protocol - sha256 for example.
- * @param {string} data - string to sign.
- * @param {string} secret - secret key
+ * @param {object} data - object to create sha256.
+ * @param {string} secret - object to create sha.
  *
  * @returns {string} return signature string.
  */
-module.exports = function signature(protocol, data, secret) {
-  return createHmac(protocol, secret)
-               .update(data)
-               .digest('hex');
+export default async function(data, secret) {
+  const enc = new TextEncoder();
+  const body = data;
+  const algorithm = { name: "HMAC", hash: "SHA-256" };
+
+  const key = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(secret),
+      algorithm,
+      false,
+      ["sign", "verify"]
+  );
+
+  const signature = await crypto.subtle.sign(
+      algorithm.name,
+      key,
+      enc.encode(body)
+  );
+
+  // convert buffer to byte array
+  const hashArray = Array.from(new Uint8Array(signature));
+
+  // convert bytes to hex string
+  return hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 };
