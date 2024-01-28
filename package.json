@@ -2,22 +2,22 @@
   "name": "@microservice-framework/microservice-client",
   "version": "2.0.0",
   "description": "Client Interface for microservice-framework",
-  "main": "index.js",
+  "main": "src/MicroserviceClient.js",
   "type": "module",
   "files": [
-    "index.js",
-    "dist/*",
-    "includes"
+    "src/*",
+    "dist/*"
   ],
   "exports": {
     ".": {
-      "import": "./dist/microservice-client.mjs",
+      "import": "./src/MicroserviceClient.js",
       "require": "./dist/microservice-client.umd.cjs"
     }
   },
   "scripts": {
     "test": "echo \"Error: no test specified yet.\" && exit 1",
     "build": "vite build",
+    "dev": "vite dev",
     "build-client": "node build-client.js",
     "build-min": "node dev/build-min.js",
     "build-websocket": "node dev/build-ws.js",
@@ -34,13 +34,6 @@
     "url": "https://github.com/microservice-framework/microservice-client/issues"
   },
   "homepage": "https://github.com/microservice-framework/microservice-client#readme",
-  "1dependencies": {
-    "browser-emitter": "^0.7.2",
-    "create-hmac": "^1.1.4",
-    "request": "^2.81.0",
-    "reqwest": "^2.0.5",
-    "sha.js": "^2.4.8"
-  },
   "devDependencies": {
     "eslint": "^8.56.0",
     "vite": "^5.0.12"

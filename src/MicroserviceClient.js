@@ -1,8 +1,6 @@
 import axios from 'axios';
 import debugF from 'debug';
-import signature from './includes/signature.js'
-//import sig2 from "./includes/signature.js"
-
+import signature from './signature.js'
 
 /**
  * Constructor of MicroserviceClientClient object.
@@ -25,7 +23,7 @@ function MicroserviceClient(settings) {
   }
   
   // If we are running under node, set version User-agent.
-  if (process.env.npm_package_version && !process.browser) {
+  if (process && process.env && process.env.npm_package_version) {
     config.headers['User-Agent'] = 'MicroserviceClient.' + 
     process.env.npm_package_name + '.' +
     process.env.npm_package_version;

@@ -19,10 +19,14 @@ export default function (build) {
     resolve: {
       alias: mapSettings.alias,
     },
+    define: {
+      'process': {}
+    },
     build: {
+      sourcemap: true,
       outDir: mapSettings.outDir,
       lib: {
-        entry: './index.js',
+        entry: './src/MicroserviceClient.js',
         name: "MicroserviceClient",
         // the proper extensions will be added
         fileName: "microservice-client",
