@@ -19,10 +19,6 @@
     "test": "echo \"Error: no test specified yet.\" && exit 1",
     "build": "vite build",
     "dev": "vite dev",
-    "build-client": "node build-client.js",
-    "build-min": "node dev/build-min.js",
-    "build-websocket": "node dev/build-ws.js",
-    "build-all": "node dev/build-all.js",
     "cs": "node_modules/.bin/eslint --fix --ext js ./*.js includes"
   },
   "repository": {

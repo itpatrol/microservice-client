@@ -1,17 +1,7 @@
 import axios from 'axios';
-import debugF from 'debug';
+import debug from "./debug.js";
 import signature from './signature.js'
 
-var debug = {
-  log: function(){},
-  debug: function(){}
-}
-if(debugF) {
-  debug = {
-    debug: debugF('microservice-client:debug'),
-    log: debugF('microservice-client:log')
-  }
-}
 
 /**
  * Constructor of MicroserviceClientClient object.
@@ -47,13 +37,7 @@ function MicroserviceClient(settings) {
  */
 MicroserviceClient.prototype.settings = {};
 
-/**
- * Settings for microservice.
- */
-MicroserviceClient.prototype.debug = {
-  debug: debugF('microservice-client:debug'),
-  log: debugF('microservice-client:log')
-};
+
 /**
  * Preprocess request by signing in, setting headers and etc..
  *
@@ -85,7 +69,7 @@ MicroserviceClient.prototype._request = async function(reqOptions) {
     return {
       code: response.status,
       answer: response.data, 
-      headers: response.headers
+      headers: JSON.parse(JSON.stringify(response.headers))
       
     }
   }).
@@ -98,7 +82,7 @@ MicroserviceClient.prototype._request = async function(reqOptions) {
       return {
         code: error.response.status,
         error: error.response.data, 
-        headers: error.response.headers
+        headers: JSON.parse(JSON.stringify(error.response.headers))
       }
     } else {
       return {

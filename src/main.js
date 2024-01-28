@@ -1,3 +1,4 @@
+window.isDebug = false;
 import MicroserviceClient from "./MicroserviceClient"
 
 var client = new MicroserviceClient({
