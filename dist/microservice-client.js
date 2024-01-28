@@ -15,12 +15,12 @@ function Je(e) {
   let t;
   return typeof ArrayBuffer < "u" && ArrayBuffer.isView ? t = ArrayBuffer.isView(e) : t = e && e.buffer && Ee(e.buffer), t;
 }
-const ze = J("string"), O = J("function"), Se = J("number"), z = (e) => e !== null && typeof e == "object", ve = (e) => e === !0 || e === !1, j = (e) => {
+const ze = J("string"), O = J("function"), Se = J("number"), z = (e) => e !== null && typeof e == "object", $e = (e) => e === !0 || e === !1, j = (e) => {
   if (M(e) !== "object")
     return !1;
   const t = te(e);
   return (t === null || t === Object.prototype || Object.getPrototypeOf(t) === null) && !(Symbol.toStringTag in e) && !(Symbol.iterator in e);
-}, $e = A("Date"), Ve = A("File"), Ke = A("Blob"), We = A("FileList"), Ge = (e) => z(e) && O(e.pipe), Xe = (e) => {
+}, Ve = A("Date"), Ke = A("File"), We = A("Blob"), ve = A("FileList"), Ge = (e) => z(e) && O(e.pipe), Xe = (e) => {
   let t;
   return e && (typeof FormData == "function" && e instanceof FormData || O(e.append) && ((t = M(e)) === "formdata" || // detect form-data instance
   t === "object" && O(e.toString) && e.toString() === "[object FormData]"));
@@ -138,10 +138,10 @@ const Ye = (e, t, n, { allOwnKeys: r } = {}) => (D(t, (s, o) => {
   };
   return F(e) ? r(e) : r(String(e).split(t)), n;
 }, pt = () => {
-}, ht = (e, t) => (e = +e, Number.isFinite(e) ? e : t), V = "abcdefghijklmnopqrstuvwxyz", ce = "0123456789", Te = {
+}, ht = (e, t) => (e = +e, Number.isFinite(e) ? e : t), K = "abcdefghijklmnopqrstuvwxyz", ce = "0123456789", Te = {
   DIGIT: ce,
-  ALPHA: V,
-  ALPHA_DIGIT: V + V.toUpperCase() + ce
+  ALPHA: K,
+  ALPHA_DIGIT: K + K.toUpperCase() + ce
 }, mt = (e = 16, t = Te.ALPHA_DIGIT) => {
   let n = "";
   const { length: r } = t;
@@ -177,19 +177,19 @@ const wt = (e) => {
   isArrayBufferView: Je,
   isString: ze,
   isNumber: Se,
-  isBoolean: ve,
+  isBoolean: $e,
   isObject: z,
   isPlainObject: j,
   isUndefined: B,
-  isDate: $e,
-  isFile: Ve,
-  isBlob: Ke,
+  isDate: Ve,
+  isFile: Ke,
+  isBlob: We,
   isRegExp: lt,
   isFunction: O,
   isStream: Ge,
   isURLSearchParams: Qe,
   isTypedArray: ot,
-  isFileList: We,
+  isFileList: ve,
   forEach: D,
   merge: X,
   extend: Ye,
@@ -291,7 +291,7 @@ function Ot(e) {
 const Rt = a.toFlatObject(a, {}, null, function(t) {
   return /^is[A-Z]/.test(t);
 });
-function v(e, t, n) {
+function $(e, t, n) {
   if (!a.isObject(e))
     throw new TypeError("target must be an object");
   t = t || new FormData(), n = a.toFlatObject(n, {
@@ -368,7 +368,7 @@ function le(e) {
   });
 }
 function ne(e, t) {
-  this._pairs = [], e && v(e, this, t);
+  this._pairs = [], e && $(e, this, t);
 }
 const Pe = ne.prototype;
 Pe.append = function(t, n) {
@@ -473,7 +473,7 @@ self instanceof WorkerGlobalScope && typeof self.importScripts == "function", _t
   ...xt
 };
 function Ft(e, t) {
-  return v(e, new R.classes.URLSearchParams(), Object.assign({
+  return $(e, new R.classes.URLSearchParams(), Object.assign({
     visitor: function(n, r, s, o) {
       return R.isNode && a.isBuffer(n) ? (this.append(r, n.toString("base64")), !1) : o.defaultVisitor.apply(this, arguments);
     }
@@ -536,7 +536,7 @@ const re = {
         return Ft(t, this.formSerializer).toString();
       if ((c = a.isFileList(t)) || r.indexOf("multipart/form-data") > -1) {
         const p = this.env && this.env.FormData;
-        return v(
+        return $(
           c ? { "files[]": t } : t,
           p && new p(),
           this.formSerializer
@@ -624,7 +624,7 @@ function jt(e) {
   return t;
 }
 const qt = (e) => /^[-_a-zA-Z0-9^`|~,!#$%&'*+.]+$/.test(e.trim());
-function K(e, t, n, r, s) {
+function W(e, t, n, r, s) {
   if (a.isFunction(r))
     return r.call(this, t, n);
   if (s && (t = n), !!a.isString(t)) {
@@ -648,7 +648,7 @@ function It(e, t) {
     });
   });
 }
-class $ {
+class V {
   constructor(t) {
     t && this.set(t);
   }
@@ -684,7 +684,7 @@ class $ {
   has(t, n) {
     if (t = U(t), t) {
       const r = a.findKey(this, t);
-      return !!(r && this[r] !== void 0 && (!n || K(this, this[r], r, n)));
+      return !!(r && this[r] !== void 0 && (!n || W(this, this[r], r, n)));
     }
     return !1;
   }
@@ -694,7 +694,7 @@ class $ {
     function o(i) {
       if (i = U(i), i) {
         const c = a.findKey(r, i);
-        c && (!n || K(r, r[c], c, n)) && (delete r[c], s = !0);
+        c && (!n || W(r, r[c], c, n)) && (delete r[c], s = !0);
       }
     }
     return a.isArray(t) ? t.forEach(o) : o(t), s;
@@ -704,7 +704,7 @@ class $ {
     let r = n.length, s = !1;
     for (; r--; ) {
       const o = n[r];
-      (!t || K(this, this[o], o, t, !0)) && (delete this[o], s = !0);
+      (!t || W(this, this[o], o, t, !0)) && (delete this[o], s = !0);
     }
     return s;
   }
@@ -757,8 +757,8 @@ class $ {
     return a.isArray(t) ? t.forEach(o) : o(t), this;
   }
 }
-$.accessor(["Content-Type", "Content-Length", "Accept", "Accept-Encoding", "User-Agent", "Authorization"]);
-a.reduceDescriptors($.prototype, ({ value: e }, t) => {
+V.accessor(["Content-Type", "Content-Length", "Accept", "Accept-Encoding", "User-Agent", "Authorization"]);
+a.reduceDescriptors(V.prototype, ({ value: e }, t) => {
   let n = t[0].toUpperCase() + t.slice(1);
   return {
     get: () => e,
@@ -767,9 +767,9 @@ a.reduceDescriptors($.prototype, ({ value: e }, t) => {
     }
   };
 });
-a.freezeMethods($);
-const g = $;
-function W(e, t) {
+a.freezeMethods(V);
+const g = V;
+function v(e, t) {
   const n = this || se, r = t || n, s = g.from(r.headers);
   let o = r.data;
   return a.forEach(e, function(c) {
@@ -825,13 +825,13 @@ const Jt = R.hasStandardBrowserEnv ? (
 function zt(e) {
   return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(e);
 }
-function vt(e, t) {
+function $t(e, t) {
   return t ? e.replace(/\/?\/$/, "") + "/" + t.replace(/^\/+/, "") : e;
 }
 function De(e, t) {
-  return e && !zt(t) ? vt(e, t) : t;
+  return e && !zt(t) ? $t(e, t) : t;
 }
-const $t = R.hasStandardBrowserEnv ? (
+const Vt = R.hasStandardBrowserEnv ? (
   // Standard browser envs have full support of the APIs needed to test
   // whether the request URL is of the same origin as current location.
   function() {
@@ -863,11 +863,11 @@ const $t = R.hasStandardBrowserEnv ? (
     };
   }()
 );
-function Vt(e) {
+function Kt(e) {
   const t = /^([-+\w]{1,25})(:?\/\/|:)/.exec(e);
   return t && t[1] || "";
 }
-function Kt(e, t) {
+function Wt(e, t) {
   e = e || 10;
   const n = new Array(e), r = new Array(e);
   let s = 0, o = 0, i;
@@ -885,7 +885,7 @@ function Kt(e, t) {
 }
 function pe(e, t) {
   let n = 0;
-  const r = Kt(50, 250);
+  const r = Wt(50, 250);
   return (s) => {
     const o = s.loaded, i = s.lengthComputable ? s.total : void 0, c = o - n, p = r(c), h = o <= i;
     n = o;
@@ -901,7 +901,7 @@ function pe(e, t) {
     l[t ? "download" : "upload"] = !0, e(l);
   };
 }
-const Wt = typeof XMLHttpRequest < "u", Gt = Wt && function(e) {
+const vt = typeof XMLHttpRequest < "u", Gt = vt && function(e) {
   return new Promise(function(n, r) {
     let s = e.data;
     const o = g.from(e.headers).normalize();
@@ -959,7 +959,7 @@ const Wt = typeof XMLHttpRequest < "u", Gt = Wt && function(e) {
         e,
         u
       )), u = null;
-    }, R.hasStandardBrowserEnv && (c && a.isFunction(c) && (c = c(e)), c || c !== !1 && $t(w))) {
+    }, R.hasStandardBrowserEnv && (c && a.isFunction(c) && (c = c(e)), c || c !== !1 && Vt(w))) {
       const d = e.xsrfHeaderName && e.xsrfCookieName && Jt.read(e.xsrfCookieName);
       d && o.set(e.xsrfHeaderName, d);
     }
@@ -968,7 +968,7 @@ const Wt = typeof XMLHttpRequest < "u", Gt = Wt && function(e) {
     }), a.isUndefined(e.withCredentials) || (u.withCredentials = !!e.withCredentials), i && i !== "json" && (u.responseType = e.responseType), typeof e.onDownloadProgress == "function" && u.addEventListener("progress", pe(e.onDownloadProgress, !0)), typeof e.onUploadProgress == "function" && u.upload && u.upload.addEventListener("progress", pe(e.onUploadProgress)), (e.cancelToken || e.signal) && (p = (d) => {
       u && (r(!d || d.type ? new L(null, e, u) : d), u.abort(), u = null);
     }, e.cancelToken && e.cancelToken.subscribe(p), e.signal && (e.signal.aborted ? p() : e.signal.addEventListener("abort", p)));
-    const f = Vt(w);
+    const f = Kt(w);
     if (f && R.protocols.indexOf(f) === -1) {
       r(new m("Unsupported protocol " + f + ":", m.ERR_BAD_REQUEST, e));
       return;
@@ -1024,17 +1024,17 @@ function G(e) {
     throw new L(null, e);
 }
 function me(e) {
-  return G(e), e.headers = g.from(e.headers), e.data = W.call(
+  return G(e), e.headers = g.from(e.headers), e.data = v.call(
     e,
     e.transformRequest
   ), ["post", "put", "patch"].indexOf(e.method) !== -1 && e.headers.setContentType("application/x-www-form-urlencoded", !1), Le.getAdapter(e.adapter || se.adapter)(e).then(function(r) {
-    return G(e), r.data = W.call(
+    return G(e), r.data = v.call(
       e,
       e.transformResponse,
       r
     ), r.headers = g.from(r.headers), r;
   }, function(r) {
-    return Be(r) || (G(e), r && r.response && (r.response.data = W.call(
+    return Be(r) || (G(e), r && r.response && (r.response.data = v.call(
       e,
       e.transformResponse,
       r.response
@@ -1431,7 +1431,7 @@ y.CanceledError = L;
 y.CancelToken = Zt;
 y.isCancel = Be;
 y.VERSION = je;
-y.toFormData = v;
+y.toFormData = $;
 y.AxiosError = m;
 y.Cancel = y.CanceledError;
 y.all = function(t) {
@@ -1445,7 +1445,7 @@ y.formToJSON = (e) => ke(a.isHTMLForm(e) ? new FormData(e) : e);
 y.getAdapter = Le.getAdapter;
 y.HttpStatusCode = tn;
 y.default = y;
-var P = {
+const P = {
   debug: function() {
     window.isDebug && console.info.apply(console, arguments);
   },
@@ -1468,7 +1468,7 @@ async function nn(e, t) {
 var k = {};
 function C(e) {
   this.settings = e;
-  var t = {
+  const t = {
     baseURL: e.URL,
     headers: {}
   };
@@ -1476,76 +1476,81 @@ function C(e) {
 }
 C.prototype.settings = {};
 C.prototype._request = async function(e) {
-  e.headers == null && (e.headers = {});
-  var t = ["PUT", "SEARCH", "PATCH", "POST", "OPTIONS"];
+  e.headers === void 0 && (e.headers = {});
+  const t = ["PUT", "SEARCH", "PATCH", "POST", "OPTIONS"];
   if (this.settings.secureKey && t.indexOf(e.method.toUpperCase()) !== -1) {
-    var n = await nn(JSON.stringify(e.data), this.settings.secureKey);
+    const n = await nn(JSON.stringify(e.data), this.settings.secureKey);
     e.headers.signature = "sha256=" + n, e.headers["Access-Token"] = !1;
   }
-  return P.debug("reqOptions", e), this.instance.request(e).then(function(r) {
-    return P.debug("request", r.config.headers), P.debug("response", r), P.log(r.config.method.toUpperCase(), r.config.url, r.status), {
-      code: r.status,
-      answer: r.data,
-      headers: JSON.parse(JSON.stringify(r.headers))
+  return P.debug("reqOptions", e), this.instance.request(e).then(function(n) {
+    return P.debug("request", n.config.headers), P.debug("response", n), P.log(n.config.method.toUpperCase(), n.config.url, n.status), {
+      code: n.status,
+      answer: n.data,
+      headers: JSON.parse(JSON.stringify(n.headers))
     };
-  }).catch(function(r) {
-    return P.debug("catch", r.request), r.response ? (P.log(r.response.config.method.toUpperCase(), r.response.config.url, r.response.status, r.response.data.message), {
-      code: r.response.status,
-      error: r.response.data,
-      headers: JSON.parse(JSON.stringify(r.response.headers))
+  }).catch(function(n) {
+    return P.debug("catch", n.request), n.response ? (P.log(
+      n.response.config.method.toUpperCase(),
+      n.response.config.url,
+      n.response.status,
+      n.response.data.message
+    ), {
+      code: n.response.status,
+      error: n.response.data,
+      headers: JSON.parse(JSON.stringify(n.response.headers))
     }) : {
       code: 500,
-      error: r
+      error: n
     };
   });
 };
 C.prototype.get = function(e, t) {
-  var n = {
+  const n = {
     method: "GET",
     url: "/" + e
   };
-  return t != null && (n.headers = {
+  return t !== void 0 && (n.headers = {
     token: t,
     "Access-Token": !1
   }), this._request(n);
 };
 C.prototype.delete = function(e, t) {
-  var n = {
+  const n = {
     method: "DELETE",
     url: "/" + e
   };
-  return t != null && (n.headers = {
+  return t !== void 0 && (n.headers = {
     token: t,
     "Access-Token": !1
   }), this._request(n);
 };
 C.prototype.search = function(e, t) {
-  var n = {
+  const n = {
     method: "SEARCH",
     url: "/"
   };
   return arguments.length === 1 && (t = e, e = !1), e && (n.url += e), t && (n.data = t), this._request(n);
 };
 C.prototype.post = function(e, t) {
-  var n = {
+  const n = {
     method: "POST",
     url: "/"
   };
   return arguments.length === 1 && (t = e, e = !1), e && (n.url += e), t && (n.data = t), this._request(n);
 };
 C.prototype.options = function(e, t) {
-  var n = {
+  const n = {
     method: "OPTIONS",
     url: "/"
   };
   return e && (n.url += e), t && (n.data = t), this._request(n);
 };
 C.prototype.put = function(e, t, n) {
-  var r = {
+  const r = {
     method: "PUT",
     url: "/" + e
   };
-  return arguments.length === 2 && (n = t, t = !1), t != !1 && (r.headers = {
+  return arguments.length === 2 && (n = t, t = !1), t !== !1 && (r.headers = {
     token: t,
     "Access-Token": !1
   }), n && (r.data = n), this._request(r);

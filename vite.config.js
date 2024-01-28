@@ -1,4 +1,3 @@
-/*global process, __dirname*/
 import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 
@@ -6,7 +5,7 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config/
 export default function (build) {
 
-  var mapSettings = {
+  const mapSettings = {
     "outDir": "dist/",
     "alias": {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

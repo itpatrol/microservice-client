@@ -1,3 +1,4 @@
+/* global process */
 import axios from 'axios';
 import debug from "./debug.js";
 import signature from './signature.js'
@@ -12,7 +13,7 @@ import signature from './signature.js'
  */
 function MicroserviceClient(settings) {
   this.settings = settings
-  var config = {
+  const config = {
     baseURL: settings.URL,
     headers: {}
   }
@@ -47,14 +48,14 @@ MicroserviceClient.prototype.settings = {};
  * @returns {Promise}
  */
 MicroserviceClient.prototype._request = async function(reqOptions) {
-  if(reqOptions.headers == undefined) {
+  if(reqOptions.headers === undefined) {
     reqOptions.headers = {}
   }
   
-  var signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
+  const signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
 
   if (this.settings.secureKey && signatureMethods.indexOf(reqOptions.method.toUpperCase()) !== -1) {
-    var hash = await signature(JSON.stringify(reqOptions.data), this.settings.secureKey);
+    const hash = await signature(JSON.stringify(reqOptions.data), this.settings.secureKey);
     reqOptions.headers.signature = 'sha256=' + hash
     reqOptions.headers['Access-Token'] = false
   }
@@ -62,35 +63,38 @@ MicroserviceClient.prototype._request = async function(reqOptions) {
   debug.debug('reqOptions', reqOptions)
   
   return this.instance.request(reqOptions).
-  then(function(response) {
-    debug.debug('request', response.config.headers)
-    debug.debug('response', response);
-    debug.log(response.config.method.toUpperCase(), response.config.url, response.status)
-    return {
-      code: response.status,
-      answer: response.data, 
-      headers: JSON.parse(JSON.stringify(response.headers))
+    then(function(response) {
+      debug.debug('request', response.config.headers)
+      debug.debug('response', response);
+      debug.log(response.config.method.toUpperCase(), response.config.url, response.status)
+      return {
+        code: response.status,
+        answer: response.data, 
+        headers: JSON.parse(JSON.stringify(response.headers))
       
-    }
-  }).
-  catch(function(error){
-    debug.debug('catch', error.request)
-    if(error.response) {
+      }
+    }).
+    catch(function(error){
+      debug.debug('catch', error.request)
+      if(error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      debug.log(error.response.config.method.toUpperCase(), error.response.config.url, error.response.status, error.response.data.message)
-      return {
-        code: error.response.status,
-        error: error.response.data, 
-        headers: JSON.parse(JSON.stringify(error.response.headers))
+        debug.log(error.response.config.method.toUpperCase(), 
+          error.response.config.url, 
+          error.response.status, 
+          error.response.data.message)
+        return {
+          code: error.response.status,
+          error: error.response.data, 
+          headers: JSON.parse(JSON.stringify(error.response.headers))
+        }
+      } else {
+        return {
+          code: 500,
+          error, 
+        }
       }
-    } else {
-      return {
-        code: 500,
-        error: error, 
-      }
-    }
-  })
+    })
 }
 /**
  * Process GET (READ) request.
@@ -100,11 +104,11 @@ MicroserviceClient.prototype._request = async function(reqOptions) {
  * @returns {Promise}
  */
 MicroserviceClient.prototype.get = function(RecordID, RecordToken) {
-  var reqOptions = {
+  const reqOptions = {
     method: 'GET',
     url: '/' + RecordID,
   }
-  if (RecordToken != undefined) {
+  if (RecordToken !== undefined) {
     reqOptions.headers = {
       token: RecordToken,
       'Access-Token': false
@@ -121,11 +125,11 @@ MicroserviceClient.prototype.get = function(RecordID, RecordToken) {
  * @returns {Promise}
  */
 MicroserviceClient.prototype.delete = function(RecordID, RecordToken) {
-  var reqOptions = {
+  const reqOptions = {
     method: 'DELETE',
     url: '/' + RecordID,
   }
-  if (RecordToken != undefined) {
+  if (RecordToken !== undefined) {
     reqOptions.headers = {
       token: RecordToken,
       'Access-Token': false
@@ -142,7 +146,7 @@ MicroserviceClient.prototype.delete = function(RecordID, RecordToken) {
  * @returns {Promise}
  */
 MicroserviceClient.prototype.search = function(EndPoint, data) {
-  var reqOptions = {
+  const reqOptions = {
     method: 'SEARCH',
     url: '/',
   }
@@ -167,7 +171,7 @@ MicroserviceClient.prototype.search = function(EndPoint, data) {
  * @returns {Promise}
  */
 MicroserviceClient.prototype.post = function(EndPoint, data) {
-  var reqOptions = {
+  const reqOptions = {
     method: 'POST',
     url: '/',
   }
@@ -192,7 +196,7 @@ MicroserviceClient.prototype.post = function(EndPoint, data) {
  * @returns {Promise}
  */
 MicroserviceClient.prototype.options = function(EndPoint, data) {
-  var reqOptions = {
+  const reqOptions = {
     method: 'OPTIONS',
     url: '/',
   }
@@ -215,7 +219,7 @@ MicroserviceClient.prototype.options = function(EndPoint, data) {
  * @returns {Promise}
  */
 MicroserviceClient.prototype.put = function(RecordID, RecordToken, data) {
-  var reqOptions = {
+  const reqOptions = {
     method: 'PUT',
     url: '/' + RecordID,
   }
@@ -224,7 +228,7 @@ MicroserviceClient.prototype.put = function(RecordID, RecordToken, data) {
     RecordToken = false;
   }
 
-  if (RecordToken != false) {
+  if (RecordToken !== false) {
     reqOptions.headers = {
       token: RecordToken,
       'Access-Token': false

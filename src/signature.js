@@ -16,17 +16,17 @@ export default async function(data, secret) {
   const algorithm = { name: "HMAC", hash: "SHA-256" };
 
   const key = await crypto.subtle.importKey(
-      "raw",
-      enc.encode(secret),
-      algorithm,
-      false,
-      ["sign", "verify"]
+    "raw",
+    enc.encode(secret),
+    algorithm,
+    false,
+    ["sign", "verify"]
   );
 
   const signature = await crypto.subtle.sign(
-      algorithm.name,
-      key,
-      enc.encode(body)
+    algorithm.name,
+    key,
+    enc.encode(body)
   );
 
   // convert buffer to byte array
@@ -34,6 +34,6 @@ export default async function(data, secret) {
 
   // convert bytes to hex string
   return hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-};
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}

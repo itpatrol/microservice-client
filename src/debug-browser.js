@@ -1,5 +1,5 @@
 
-var debug = {
+const debug = {
   debug: function() {
     if(window.isDebug) {
       console.info.apply(console, arguments);
