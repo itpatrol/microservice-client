@@ -1,12 +1,8 @@
-/**
- * Send status.
- */
-'use strict';
+import axios from 'axios';
+import debugF from 'debug';
+import signature from './includes/hash.js'
+//import sig2 from "./includes/signature.js"
 
-var request = require('./includes/request.js');
-var signature = require('./includes/signature.js');
-
-var bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; };
 
 /**
  * Constructor of MicroserviceClientClient object.
@@ -16,14 +12,25 @@ var bind = function(fn, me) { return function() { return fn.apply(me, arguments)
  *   settings.accessToken = if microservice-auth used, accessToken can be set here.
  */
 function MicroserviceClient(settings) {
-  var self = this;
-  self.settings = settings;
-  self.get = bind(self.get, self);
-  self.post = bind(self.post, self);
-  self.put = bind(self.put, self);
-  self.delete = bind(self.delete, self);
-  self.search = bind(self.search, self);
-  self._request = bind(self._request, self);
+  this.settings = settings
+  var config = {
+    baseURL: settings.URL,
+    headers: {}
+  }
+  if(settings.headers) {
+    config.headers = settings.headers
+  }
+  if(settings.accessToken) {
+    config.headers['Access-Token'] = settings.accessToken;
+  }
+  
+  // If we are running under node, set version User-agent.
+  if (process.env.npm_package_version && !process.browser) {
+    config.headers['User-Agent'] = 'MicroserviceClient.' + 
+    process.env.npm_package_name + '.' +
+    process.env.npm_package_version;
+  }
+  this.instance = axios.create(config);
 }
 
 /**
@@ -31,227 +38,212 @@ function MicroserviceClient(settings) {
  */
 MicroserviceClient.prototype.settings = {};
 
-
+/**
+ * Settings for microservice.
+ */
+MicroserviceClient.prototype.debug = {
+  debug: debugF('microservice-client:debug'),
+  log: debugF('microservice-client:log')
+};
 /**
  * Preprocess request by signing in, setting headers and etc..
  *
- * @param {object} statusRequest
+ * @param {object} reqOptions
  *  - method
- *  - token
- *  - Request
- *  - RecordID
- * @param {function} callback - return result to callback function
+ *  - headers
+ * @returns {Promise}
  */
-MicroserviceClient.prototype._request = function(statusRequest, callback) {
+MicroserviceClient.prototype._request = async function(reqOptions) {
   var self = this;
-
+  if(reqOptions.headers == undefined) {
+    reqOptions.headers = {}
+  }
+  
   var signatureMethods = ['PUT', 'SEARCH', 'PATCH', 'POST', 'OPTIONS'];
 
-  var requestData = statusRequest.Request;
-
-  var headers = {};
-  if (self.settings.headers) {
-    headers = self.settings.headers;
-    if (!headers['Accept']) {
-      headers['Accept'] = 'application/json';
-    }
-  } else {
-    headers = {
-      Accept: 'application/json'
-    }
+  if (this.settings.secureKey && signatureMethods.indexOf(reqOptions.method.toUpperCase()) !== -1) {
+    var hash = await signature(JSON.stringify(reqOptions.data), this.settings.secureKey);
+    reqOptions.headers.signature = 'sha256=' + hash
+    reqOptions.headers['Access-Token'] = false
   }
 
-  // If we are running under node, set version User-agent.
-  if (process.env.npm_package_version && !process.browser) {
-    headers['User-Agent'] = 'MicroserviceClient.' + process.env.npm_package_name
-      + '.' + process.env.npm_package_version;
-  }
-
-  if (self.settings.accessToken) {
-    headers['access_token'] = self.settings.accessToken;
-    headers['Access-Token'] = self.settings.accessToken;
-  } else {
-    if (signatureMethods.indexOf(statusRequest.method) > -1) {
-      if (self.settings.secureKey) {
-        headers.signature = 'sha256=' +
-          signature('sha256', JSON.stringify(requestData), self.settings.secureKey);
+  this.debug.log('reqOptions', reqOptions)
+  
+  return this.instance.request(reqOptions).
+  then(function(response) {
+    self.debug.log('request', response.config.headers)
+    self.debug.debug('response', response);
+    self.debug.log(response.config.method.toUpperCase(), response.config.url, response.status)
+    return {
+      code: response.status,
+      answer: response.data, 
+      headers: response.headers
+      
+    }
+  }).
+  catch(function(error){
+    self.debug.debug('catch', error.request)
+    if(error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      self.debug.log(error.response.config.method.toUpperCase(), error.response.config.url, error.response.status, error.response.data.message)
+      return {
+        code: error.response.status,
+        error: error.response.data, 
+        headers: error.response.headers
       }
     } else {
-      if (statusRequest.token) {
-        headers.token = statusRequest.token;
+      return {
+        code: 500,
+        error: error, 
       }
     }
-  }
-  var url = self.settings.URL;
-  if (url.slice(-1) == '/') {
-    url = url.substring(0, url.length - 1);
-  }
-
-  if (statusRequest.EndPoint) {
-    url = url + '/' + statusRequest.EndPoint;
-  }
-
-  if (statusRequest.RecordID) {
-    url = url + '/' + statusRequest.RecordID;
-  }
-
-  var requestQuery = {
-    url: url,
-    method: statusRequest.method,
-    headers: headers,
-    contentType: 'application/json',
-    error: function(err) {
-      return callback(err.response, null, err.headers);
-    },
-    success: function(resp, headers) {
-      return callback(null, resp, headers);
-    }
-  }
-  if (requestData) {
-    requestQuery.data = JSON.stringify(requestData);
-    requestQuery.dataOrigin = requestData;
-  }
-  request(requestQuery);
+  })
 }
-
 /**
  * Process GET (READ) request.
  *
  * @param {string} RecordID - sha256 for example.
- * @param {string} token - optional, 24 length long string.
- * @param {function} callback - return result to callback function
+ * @param {string} RecordToken - optional, 24 length long string.
+ * @returns {Promise}
  */
-MicroserviceClient.prototype.get = function(RecordID, token, callback) {
-  var self = this;
-
-  var statusRequest = {
+MicroserviceClient.prototype.get = function(RecordID, RecordToken) {
+  var reqOptions = {
     method: 'GET',
-    RecordID: RecordID,
-    Request: null
+    url: '/' + RecordID,
   }
-
-  if (arguments.length === 2) {
-    callback = token;
-  } else {
-    statusRequest.token = token;
+  if (RecordToken != undefined) {
+    reqOptions.headers = {
+      token: RecordToken,
+      'Access-Token': false
+    }
   }
-
-  return self._request(statusRequest, callback);
+  return this._request(reqOptions);
 }
 
 /**
  * Process DELETE request.
  *
  * @param {string} RecordID - sha256 for example.
- * @param {string} token - optional, 24 length long string.
- * @param {function} callback - return result to callback function
+ * @param {string} RecordToken - optional, 24 length long string.
+ * @returns {Promise}
  */
-MicroserviceClient.prototype.delete = function(RecordID, token, callback) {
-  var self = this;
-  var statusRequest = {
+MicroserviceClient.prototype.delete = function(RecordID, RecordToken) {
+  var reqOptions = {
     method: 'DELETE',
-    RecordID: RecordID,
-    Request: null
+    url: '/' + RecordID,
   }
-
-  if (arguments.length === 2) {
-    callback = token;
-  } else {
-    statusRequest.token = token;
+  if (RecordToken != undefined) {
+    reqOptions.headers = {
+      token: RecordToken,
+      'Access-Token': false
+    }
   }
-
-  return self._request(statusRequest, callback);
+  return this._request(reqOptions);
 }
 
 /**
  * Process SEARCH (get list of documents based on search criteria) request.
  *
+ * @param {string} EndPoint - like `users` to get access to api.net/users
  * @param {object} data - values that need to be updated.
- * @param {function} callback - return result to callback function
+ * @returns {Promise}
  */
-MicroserviceClient.prototype.search = function(EndPoint, data, callback) {
-  var self = this;
-  if (arguments.length === 2) {
-    callback = data;
+MicroserviceClient.prototype.search = function(EndPoint, data) {
+  var reqOptions = {
+    method: 'SEARCH',
+    url: '/',
+  }
+  if (arguments.length === 1) {
     data = EndPoint;
     EndPoint = false;
   }
-  var statusRequest = {
-    method: 'SEARCH',
-    Request: data,
-    EndPoint: EndPoint,
+  if(EndPoint) {
+    reqOptions.url += EndPoint
   }
-
-  return self._request(statusRequest, callback);
+  if(data) {
+    reqOptions.data = data
+  }
+  
+  return this._request(reqOptions);
 }
 
 /**
  * Process POST (CREATE) request.
- *
+ * @param {string} EndPoint - like `users` to get access to api.net/users
  * @param {object} data - object with document to create.
- * @param {function} callback - return result to callback function
+ * @returns {Promise}
  */
-MicroserviceClient.prototype.post = function(EndPoint, data, callback) {
-  var self = this;
-  if (arguments.length === 2) {
-    callback = data;
+MicroserviceClient.prototype.post = function(EndPoint, data) {
+  var reqOptions = {
+    method: 'POST',
+    url: '/',
+  }
+  if (arguments.length === 1) {
     data = EndPoint;
     EndPoint = false;
   }
-  var statusRequest = {
-    method: 'POST',
-    Request: data,
-    EndPoint: EndPoint,
+  if(EndPoint) {
+    reqOptions.url += EndPoint
   }
-  return self._request(statusRequest, callback);
+  if(data) {
+    reqOptions.data = data
+  }
+  
+  return this._request(reqOptions);
 }
 
 /**
  * Process OPTIONS (get data about supported methods and etc.) request.
  *
  * @param {object} data - ignored. For future use.
- * @param {function} callback - return result to callback function
+ * @returns {Promise}
  */
-MicroserviceClient.prototype.options = function(EndPoint, data, callback) {
-  var self = this;
-  if (arguments.length === 2) {
-    callback = data;
-    data = EndPoint;
-    EndPoint = false;
-  }
-  var statusRequest = {
+MicroserviceClient.prototype.options = function(EndPoint, data) {
+  var reqOptions = {
     method: 'OPTIONS',
-    Request: data,
-    EndPoint: EndPoint,
+    url: '/',
   }
-  return self._request(statusRequest, callback);
+  if(EndPoint) {
+    reqOptions.url += EndPoint
+  }
+  if(data) {
+    reqOptions.data = data
+  }
+  
+  return this._request(reqOptions);
 }
 
 /**
  * Process PUT (UPDATE) request.
  *
  * @param {string} RecordID - sha256 for example.
- * @param {string} token - optional, 24 length long string .
+ * @param {string} RecordToken - optional, 24 length long string.
  * @param {object} data - values that need to be updated.
- * @param {function} callback - return result to callback function
+ * @returns {Promise}
  */
-MicroserviceClient.prototype.put = function(RecordID, token, data, callback) {
-  var self = this;
-  var statusRequest = {
+MicroserviceClient.prototype.put = function(RecordID, RecordToken, data) {
+  var reqOptions = {
     method: 'PUT',
-    RecordID: RecordID
+    url: '/' + RecordID,
+  }
+  if (arguments.length === 2) {
+    data = RecordToken;
+    RecordToken = false;
   }
 
-  if (arguments.length === 3) {
-    callback = data;
-    data = token
-  } else {
-    statusRequest.token = token;
+  if (RecordToken != false) {
+    reqOptions.headers = {
+      token: RecordToken,
+      'Access-Token': false
+    }
   }
-  statusRequest.Request = data;
 
-  return self._request(statusRequest, callback);
+  if(data) {
+    reqOptions.data = data
+  }
+  
+  return this._request(reqOptions);
 }
 
-
-module.exports = MicroserviceClient;
+export default MicroserviceClient
