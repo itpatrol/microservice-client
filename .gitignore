@@ -3,4 +3,4 @@ datastore
 .env
 pidfile
 .DS_Store
-t
+yarn.lock
