@@ -1,29 +1,13 @@
 # microservice-client
 
-[![Gitter](https://img.shields.io/gitter/room/microservice-framework/chat.svg?style=flat-square)](https://gitter.im/microservice-framework/chat)
 [![npm](https://img.shields.io/npm/dt/@microservice-framework/microservice-client.svg?style=flat-square)](https://www.npmjs.com/~microservice-framework)
 [![microservice-frame.work](https://img.shields.io/badge/online%20docs-200-green.svg?style=flat-square)](http://microservice-frame.work)
 
 Microservice framework client.
 
-On webBrowser level is possible to use AJAX and WebSocket. 
+
 See examples [here](https://github.com/microservice-framework/microservice-client/tree/master/examples).
 
-```html
-    <script src="http://microservice-frame.work/js/microservice-client.min.js"></script>
-    <script>
-$(function() {    
-    var clientSettings = {
-      URL: "wss://apiserver.com/ws_endpoint/",
-      token: 'secureKey or AccessToken'
-    }
-    ws = new MicroserviceWebSocket(clientSettings);
-    ws.on('message', function(object){
-      console.log(object);
-    });
-});
-    </script>
-```
 
 ```html
     <script src="http://microservice-frame.work/js/microservice-client.min.js"></script>
@@ -34,11 +18,11 @@ $(function() {
       secureKey: 'ServiceSecureKey'
     }
     client = new MicroserviceClient(clientSettings);
-    client.search({}, function(err, handlerResponse){
-      if(err){
-        return $('#result').html(err);
+    client.search({}).then((response)=>{
+      if(response.error){
+        return $('#result').html(response.error);
       }
-      $('#result').html(JSON.stringify(handlerResponse, null, 2));
+      $('#result').html(JSON.stringify(response, null, 2));
     });
 });
 
@@ -48,11 +32,11 @@ $(function() {
       secureKey: 'ServiceSecureKey'
     }
     client = new MicroserviceClient(clientSettings);
-    client.search('endpoint', {}, function(err, handlerResponse){
-      if(err){
-        return $('#result').html(err);
+    client.search('endpoint', {}).then((response)=>{
+      if(response.error){
+        return $('#result').html(response.error);
       }
-      $('#result').html(JSON.stringify(handlerResponse, null, 2));
+      $('#result').html(JSON.stringify(response, null, 2));
     });
 });
     </script>
@@ -81,50 +65,53 @@ client.post({
     data: {
       value: test
     }
-  }, function(err, handlerResponse){
-    console.log(handlerResponse);
-    RecordID = handlerResponse.id;
-    RecordToken = handlerResponse.token;
+  }).then( (response) => {
+    console.log(response);
+    if(response.error) {
+      return 
+    }
     
-    client.search({
-      name: "Microservice"
-      }, function(err, handlerResponse){
-        console.log(handlerResponse);
+    RecordID = response.answer.id;
+    RecordToken = response.answer.token;
+    
+    client.search({ name: "Microservice" }).then( (response) => {
+      console.log(response);
+      if(response.error) {
+        return 
+      }
+    });
+
+    client.get(RecordID, RecordToken).then( (response) => {
+      console.log(response);
+      if(response.error) {
+        return 
+      }
     });
     
-    client.get(RecordID, RecordToken, function(err, handlerResponse){
-      console.log(handlerResponse);
-    });
     
     client.put(RecordID, RecordToken, {
       extra: {
         extravalue: "test2"
       }
-    }, function(err, handlerResponse){
-      console.log(handlerResponse);
+    }).then( (response) => {
+      console.log(response);
+      if(response.error) {
+        return 
+      }
+    });
+
+    client.delete(RecordID, RecordToken).then( (response) => {
+      console.log(response);
+      if(response.error) {
+        return 
+      }
     });
     
-    client.delete(RecordID, RecordToken, function(err, handlerResponse){
-      console.log(handlerResponse);
-    });
 });
 
 ```
 
 ## Changelog
-- 1.2.5
-  - added nodejs package name to UserAgent
-  - fixed URL variable
-  - added support for API based requests
-- 1.3.0
-  - switch to 'Access-Token' instead of  'access_token'
-  - support new validation for microservices
-- 1.3.1
-  - prevent autoset User-Agent if package linked by browser
-- 1.3.2
-  - replace const with var for uglify compatibility.
-- 1.3.3
-  - allow to replace header 'Accept'
-- 1.3.4
-  - fix error when parse empty response as JSON.
+- 3.0.0
+  - changed replace callback on Promise
 
