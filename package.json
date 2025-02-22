@@ -1,6 +1,6 @@
 {
   "name": "@microservice-framework/microservice-client",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Client Interface for microservice-framework",
   "main": "src/MicroserviceClient.js",
   "type": "module",
